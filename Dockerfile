@@ -6,4 +6,4 @@ COPY . .
 
 RUN pip install flask openai pydantic openenv-core
 
-CMD ["python", "server/app.py"]
+CMD ["python", "-m", "server.app"]

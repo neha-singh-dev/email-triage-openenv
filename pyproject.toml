@@ -1,13 +1,10 @@
 [project]
-name = "email-triage-openenv"
+name = "email-triage-env"
 version = "0.1.0"
-description = "OpenEnv environment for email classification and response generation"
-authors = [{ name="Neha Singh" }]
-
 dependencies = [
     "flask",
-    "pydantic",
     "openai",
+    "pydantic",
     "openenv-core>=0.2.0"
 ]
 

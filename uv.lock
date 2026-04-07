@@ -386,7 +386,7 @@ wheels = [
 ]
 
 [[package]]
-name = "email-triage-openenv"
+name = "email-triage-env"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
