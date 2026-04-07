@@ -5,6 +5,10 @@ app = Flask(__name__)
 
 env = EmailEnv(task="hard")
 
+@app.route("/", methods=["GET"])
+def home():
+    return "Email Triage OpenEnv is running!", 200
+
 @app.route("/reset", methods=["POST"])
 def reset():
     obs = env.reset()
