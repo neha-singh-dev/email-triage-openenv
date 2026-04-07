@@ -6,4 +6,4 @@ COPY . .
 
 RUN pip install flask openai pydantic
 
-CMD ["python", "app.py"]
+CMD ["python", "-m", "server.app"]
