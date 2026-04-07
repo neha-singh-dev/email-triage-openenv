@@ -5,10 +5,6 @@ app = Flask(__name__)
 
 env = EmailEnv(task="hard")
 
-@app.route("/", methods=["GET"])
-def home():
-    return "Email Triage OpenEnv is running!", 200
-
 @app.route("/reset", methods=["POST"])
 def reset():
     obs = env.reset()
@@ -32,5 +28,10 @@ def step():
 def state():
     return jsonify(env.state())
 
-if __name__ == "__main__":
+# ✅ ADD THIS
+def main():
     app.run(host="0.0.0.0", port=7860)
+
+# ✅ ALSO KEEP THIS
+if __name__ == "__main__":
+    main()
