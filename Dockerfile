@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN pip install --no-cache-dir openai pydantic
+RUN pip install flask openai pydantic
 
-CMD ["python", "inference.py"]
+CMD ["python", "app.py"]
