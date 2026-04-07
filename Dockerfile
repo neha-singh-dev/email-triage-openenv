@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN pip install flask openai pydantic
+RUN pip install flask openai pydantic openenv-core
 
-CMD ["python", "-m", "server.app"]
+CMD ["python", "server/app.py"]
