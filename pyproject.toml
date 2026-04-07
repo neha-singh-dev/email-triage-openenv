@@ -1,0 +1,16 @@
+[project]
+name = "email-triage-openenv"
+version = "0.1.0"
+description = "OpenEnv environment for email classification and response generation"
+authors = [
+    { name="Neha Singh" }
+]
+dependencies = [
+    "flask",
+    "pydantic",
+    "openai"
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
