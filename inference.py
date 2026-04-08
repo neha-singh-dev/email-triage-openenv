@@ -60,11 +60,13 @@ Email: {email_text}
         return "spam", ""
 
 async def main():
+    print(f"[START] task=all env={BENCHMARK} model={MODEL_NAME}")
+
+    total_reward = 0
+    steps = 0
+
     for task in ["easy", "medium", "hard"]:
         env = EmailEnv(task=task)
-
-        # START log
-        print(f"[START] task={task} env={BENCHMARK} model={MODEL_NAME}")
 
         obs = env.reset()
 
@@ -74,12 +76,15 @@ async def main():
 
         observation, reward, done, info = env.step(action)
 
-        # STEP log
-        print(f"[STEP] step=1 action={action.label} reward={reward:.2f} done={str(done).lower()} error=null")
+        print(f"[STEP] step={steps+1} action={action.label} reward={reward:.2f} done=true error=null")
 
-        # END log
-        success = reward >= 0.5
-        print(f"[END] success={str(success).lower()} steps=1 rewards={reward:.2f}")
+        total_reward += reward
+        steps += 1
+
+    avg_reward = total_reward / steps
+    success = avg_reward >= 0.5
+
+    print(f"[END] success={str(success).lower()} steps={steps} rewards={avg_reward:.2f}")
 
 if __name__ == "__main__":
     asyncio.run(main())
