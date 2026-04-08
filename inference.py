@@ -18,7 +18,7 @@ client = OpenAI(
     api_key=HF_TOKEN
 )
 
-TASK_NAME = "hard"
+TASKS = ["easy", "medium", "hard"]
 BENCHMARK = "email_triage_env"
 
 def get_model_action(email_text):
@@ -60,25 +60,26 @@ Email: {email_text}
         return "spam", ""
 
 async def main():
-    env = EmailEnv(task=TASK_NAME)
+    for task in ["easy", "medium", "hard"]:
+        env = EmailEnv(task=task)
 
-    # START log
-    print(f"[START] task={TASK_NAME} env={BENCHMARK} model={MODEL_NAME}")
+        # START log
+        print(f"[START] task={task} env={BENCHMARK} model={MODEL_NAME}")
 
-    obs = env.reset()
+        obs = env.reset()
 
-    label, response = get_model_action(obs.email_text)
+        label, response = get_model_action(obs.email_text)
 
-    action = Action(label=label, response=response)
+        action = Action(label=label, response=response)
 
-    observation, reward, done, info = env.step(action)
+        observation, reward, done, info = env.step(action)
 
-    # STEP log
-    print(f"[STEP] step=1 action={action.label} reward={reward:.2f} done={str(done).lower()} error=null")
+        # STEP log
+        print(f"[STEP] step=1 action={action.label} reward={reward:.2f} done={str(done).lower()} error=null")
 
-    # END log
-    success = reward >= 0.5
-    print(f"[END] success={str(success).lower()} steps=1 rewards={reward:.2f}")
+        # END log
+        success = reward >= 0.5
+        print(f"[END] success={str(success).lower()} steps=1 rewards={reward:.2f}")
 
 if __name__ == "__main__":
     asyncio.run(main())
