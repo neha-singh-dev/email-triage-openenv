@@ -34,8 +34,10 @@ class EmailEnv:
         self.current_email = random.choice(self.dataset)
         return Observation(email_text=self.current_email["text"])
     
-    def step(self,action: Action):
+    def step(self, action: Action):
         correct_label = self.current_email["label"]
+
+        reward = 0.5  # default safe
 
         if self.task == "easy":
             reward = self.grade_easy(action.label, correct_label)
@@ -45,9 +47,10 @@ class EmailEnv:
 
         elif self.task == "hard":
             reward = self.grade_hard(action.label, correct_label, action.response)
-                
-      
-        
+
+        reward = float(reward)
+
+        reward = max(0.01, min(0.99, float(reward)))
 
         done = True
         observation = Observation(email_text="")
@@ -65,6 +68,8 @@ class EmailEnv:
         }
     
     def grade_easy(self, action_label, correct_label):
+        action_label = str(action_label).lower().strip()
+        correct_label = str(correct_label).lower().strip()
         if correct_label != "spam":
             correct_label = "not_spam"
         if action_label != "spam":
@@ -73,13 +78,17 @@ class EmailEnv:
         return 0.8 if action_label == correct_label else 0.2
         
     def grade_medium(self, action_label, correct_label):
+        action_label = str(action_label).lower().strip()
+        correct_label = str(correct_label).lower().strip()
         return 0.75 if action_label == correct_label else 0.25
         
         
     def grade_hard(self, action_label, correct_label, response):
+        action_label = str(action_label).lower().strip()
+        correct_label = str(correct_label).lower().strip()
         classification_reward = 0.6 if action_label == correct_label else 0.2
 
-        response = response.lower()
+        response = str(response).lower()
         response_reward = 0.1
 
         if correct_label == "important":
