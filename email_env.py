@@ -67,31 +67,20 @@ class EmailEnv:
     def grade_easy(self, action_label, correct_label):
         if correct_label != "spam":
             correct_label = "not_spam"
-
         if action_label != "spam":
             action_label = "not_spam"
 
-        if action_label == correct_label:
-            return 0.8   # instead of 1.0
-        else:
-            return 0.2   # instead of 0.0
+        return 0.8 if action_label == correct_label else 0.2
         
     def grade_medium(self, action_label, correct_label):
-        if action_label == correct_label:
-            return 0.7
-        else:
-            return 0.3
+        return 0.75 if action_label == correct_label else 0.25
         
         
     def grade_hard(self, action_label, correct_label, response):
-    # classification score
-        if action_label == correct_label:
-            classification_reward = 0.6
-        else:
-            classification_reward = 0.2
+        classification_reward = 0.6 if action_label == correct_label else 0.2
 
         response = response.lower()
-        response_reward = 0.1  # default small reward
+        response_reward = 0.1
 
         if correct_label == "important":
             if any(word in response for word in ["sure","will","attend","okay"]):
@@ -107,8 +96,7 @@ class EmailEnv:
 
         final = classification_reward + response_reward
 
-        # ensure strictly between (0,1)
-        return min(max(final, 0.1), 0.9)
+        return min(max(final, 0.11), 0.89)
     
 if __name__ == "__main__":
     env = EmailEnv(task="hard")
