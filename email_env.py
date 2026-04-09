@@ -40,23 +40,34 @@ class EmailEnv:
     def step(self, action: Action):
         correct_label = self.current_email["label"]
 
-        reward = 0.5  # default safe
+       # 🔥 normalize task (CRITICAL)
+        task = str(self.task).lower().strip()
 
-        if self.task == "easy":
+        reward = 0.5  # safe default
+
+        if task == "easy":
             reward = self.grade_easy(action.label, correct_label)
 
-        elif self.task == "medium":
+        elif task == "medium":
             reward = self.grade_medium(action.label, correct_label)
 
-        elif self.task == "hard":
+        elif task == "hard":
             reward = self.grade_hard(action.label, correct_label, action.response)
 
-        reward = float(reward)
+        else:
+           # 🔥 fallback if validator sends unexpected task
+           reward = 0.5
 
+        # 🔥 safety guard
+        if reward is None:
+            reward = 0.5
+
+        # 🔥 strict clamp (MUST)
         reward = max(0.01, min(0.99, float(reward)))
 
         done = True
         observation = Observation(email_text="")
+
         info = {
             "correct_label": correct_label,
             "agent_label": action.label
