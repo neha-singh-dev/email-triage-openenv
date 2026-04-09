@@ -30,10 +30,13 @@ class EmailEnv:
         ]
         self.current_email = None
 
-    def get_tasks(self):
+    def tasks(self):
         return ["easy", "medium", "hard"]
 
-    def reset(self):
+    def reset(self, task=None):
+        if task:
+            self.task =str(task).lower().strip()
+
         self.current_email = random.choice(self.dataset)
         return Observation(email_text=self.current_email["text"])
     
@@ -43,27 +46,28 @@ class EmailEnv:
        # 🔥 normalize task (CRITICAL)
         task = str(self.task).lower().strip()
 
-        reward = 0.5  # safe default
+        reward = 0.51  # safe default
 
-        if task == "easy":
-            reward = self.grade_easy(action.label, correct_label)
+        try:
+            if task == "easy":
+                reward = self.grade_easy(action.label, correct_label)
 
-        elif task == "medium":
-            reward = self.grade_medium(action.label, correct_label)
+            elif task == "medium":
+                reward = self.grade_medium(action.label, correct_label)
 
-        elif task == "hard":
-            reward = self.grade_hard(action.label, correct_label, action.response)
+            elif task == "hard":
+                reward = self.grade_hard(action.label, correct_label, action.response)
 
-        else:
+        except Exception:
            # 🔥 fallback if validator sends unexpected task
-           reward = 0.5
+           reward = 0.51
 
-        # 🔥 safety guard
-        if reward is None:
-            reward = 0.5
+        reward = float(reward)
 
-        # 🔥 strict clamp (MUST)
-        reward = max(0.01, min(0.99, float(reward)))
+        if not (0<reward<1):
+            reward = 0.51
+
+        
 
         done = True
         observation = Observation(email_text="")
