@@ -30,6 +30,9 @@ class EmailEnv:
         ]
         self.current_email = None
 
+    def get_tasks(self):
+        return ["easy", "medium", "hard"]
+
     def reset(self):
         self.current_email = random.choice(self.dataset)
         return Observation(email_text=self.current_email["text"])
