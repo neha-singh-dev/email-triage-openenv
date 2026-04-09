@@ -1,14 +1,4 @@
-name: email_triage_env
-
-description: >
-  AI environment for email classification and response generation.
-
 tasks:
-  - name: easy
-    description: classify emails as spam or not_spam
-
-  - name: medium
-    description: classify emails into spam, promotion, important
-
-  - name: hard
-    description: classify emails and generate appropriate response
+    easy: {}
+    medium: {}
+    hard: {}
