@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
-import sys
-import os
+import sys, os
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
@@ -8,8 +7,7 @@ from email_env import EmailEnv, Action
 
 app = Flask(__name__)
 
-task = request.args.get("task", "easy")
-env = EmailEnv(task=task)
+env = EmailEnv(task="easy")  # ✅ FIXED
 
 @app.route("/", methods=["GET"])
 def home():
@@ -42,10 +40,8 @@ def step():
 def state():
     return jsonify(env.state())
 
-# ✅ ADD THIS
 def main():
     app.run(host="0.0.0.0", port=7860)
 
-# ✅ ALSO KEEP THIS
 if __name__ == "__main__":
     main()
