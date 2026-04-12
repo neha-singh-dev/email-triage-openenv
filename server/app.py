@@ -1,9 +1,15 @@
 from flask import Flask, request, jsonify
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
 from email_env import EmailEnv, Action
 
 app = Flask(__name__)
 
-env = EmailEnv(task="hard")
+task = request.args.get("task", "easy")
+env = EmailEnv(task=task)
 
 @app.route("/", methods=["GET"])
 def home():
@@ -16,8 +22,12 @@ def reset():
 
 @app.route("/step", methods=["POST"])
 def step():
-    data = request.json
-    action = Action(**data)
+    data = request.json or {}
+
+    try:
+        action = Action(**data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
     obs, reward, done, info = env.step(action)
 

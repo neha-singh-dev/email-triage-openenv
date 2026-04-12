@@ -1,6 +1,8 @@
 import asyncio
-import os
+import sys, os
 from openai import OpenAI
+sys.path.append(os.path.dirname(__file__))
+
 from email_env import EmailEnv, Action
 
 # ✅ Environment variables
@@ -10,7 +12,7 @@ HF_TOKEN = os.getenv("HF_TOKEN")
 
 # ❗ Required check
 if HF_TOKEN is None:
-    raise ValueError("HF_TOKEN environment variable is required")
+    print("[WARNING] No HF_TOKEN found, running dummy inference")
 
 # ✅ OpenAI client
 client = OpenAI(
@@ -23,16 +25,19 @@ BENCHMARK = "email_triage_env"
 
 def get_model_action(email_text):
     prompt = f"""
-You are an email assistant.
+    You are an email assistant.
 
-Classify the email and generate response.
+    Your task:
+    1. Classify the email into ONE of: spam, promotion, important
+    2. Generate a short response
 
-Return ONLY in this format:
-label:<label>
-response:<response>
+    STRICT FORMAT (no extra text):
+    label: <spam|promotion|important>
+    response: <one line response>
 
-Email: {email_text}
-"""
+    Email:
+    {email_text}
+    """
 
     try:
         completion = client.chat.completions.create(

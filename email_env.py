@@ -11,7 +11,7 @@ class Action(BaseModel):
 class EmailEnv:
 
     def __init__(self, task="easy"):
-        self.task = task
+        self.task = str(task).lower().strip()
         self.dataset = [
             {"text": "You won a lottery!!!","label":"spam"},
             {"text": "Meeting at 3 PM tomorrow", "label": "important"},
@@ -31,7 +31,11 @@ class EmailEnv:
         self.current_email = None
 
     def tasks(self):
-        return ["easy", "medium", "hard"]
+        return [
+            {"name": "easy"},
+            {"name": "medium"},
+            {"name": "hard"}
+        ]
 
     def reset(self, task=None):
         if task:
@@ -64,8 +68,8 @@ class EmailEnv:
 
         reward = float(reward)
 
-        if not (0<reward<1):
-            reward = 0.51
+        if self.current_email is None:
+            return Observation(email_text=""), 0.51, True, {}
 
         
 
@@ -82,7 +86,7 @@ class EmailEnv:
     def state(self):
         return {
             "task": self.task,
-            "current_email": self.current_email["text"]
+            "current_email": self.current_email["text"] if self.current_email else None
         }
     
     def grade_easy(self, action_label, correct_label):

@@ -1,4 +1,32 @@
+name: email-triage-openenv
+version: "1.0.0"
+openenv_version: "0.2.0"
+description: "Email triage environment with easy, medium, and hard tasks."
+
+# Core typed interfaces
+observation_type: email_env.Observation
+action_type: email_env.Action
+
+# Fallback grader
+grader:
+  module: graders
+  function: grade_task
+
 tasks:
-    easy: {}
-    medium: {}
-    hard: {}
+  - name: easy
+    description: "Binary classification: spam vs not_spam"
+    grader:
+      module: graders
+      function: grade_task
+
+  - name: medium
+    description: "3-way classification: spam, promotion, important"
+    grader:
+      module: graders
+      function: grade_task
+
+  - name: hard
+    description: "3-way classification plus response quality"
+    grader:
+      module: graders
+      function: grade_task

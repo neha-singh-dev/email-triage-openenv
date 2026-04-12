@@ -33,13 +33,14 @@ This environment simulates a real-world email triage system where an AI agent mu
 - email_text: content of the email
 
 ## Reward Design
+
 - Easy/Medium:
-  - Correct classification → 1.0
-  - Wrong → 0.0
+  - Correct classification → 0.8
+  - Wrong → 0.2
 
 - Hard:
-  - Classification reward + Response reward
-  - Final = average (0.0 to 1.0)
+  - Classification (0.6 or 0.2) + Response bonus (0.1–0.3)
+  - Final score always between 0 and 1 (never 0 or 1)
 
 ## Setup
 
